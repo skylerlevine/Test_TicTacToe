@@ -4,7 +4,7 @@ from pygame.locals import *
 
 
 xSize = 800
-ySize = xSize
+ySize = 400
 bgColor = (66, 163, 207)
 gridColor = (255,255,255)
 xCenters = [xSize*1/6, xSize*1/2, xSize*5/6]
@@ -20,17 +20,17 @@ class board: #draw the board
 
     def draw(self):
         self.screen = pygame.display.set_mode((xSize, ySize))
-        self.screen.fill(bgColor)
-        for i in range(0, xSize):
+        self.screen.fill(bgColor) #colors in background
+        for i in range(0, ySize): #fills in y lines
             self.screen.set_at((int(xGrid[1]), i), gridColor)
             self.screen.set_at((int(xGrid[2]), i), gridColor)
-        for i in range(0, ySize):
+        for i in range(0, xSize): #fills in x lines
             self.screen.set_at((i, int(yGrid[1])), gridColor)
             self.screen.set_at((i, int(yGrid[2])), gridColor)
 
         
 
-class tictac:
+class tictac: #mechanisms of tictactoe
     def __init__(self): 
         self.pieces = ["X", "O"]
         self.turn = self.pieces[0]
@@ -43,11 +43,11 @@ class tictac:
         self.previousMoves=[0,0,0,0,0,0,0,0,0];
 
     def drawX(self, placement):
-        pygame.draw.line(self.screen, gridColor, ((placement[0]-int(xGrid[1]*1/3)), placement[1]-int(xGrid[1]*1/3)), ((placement[0]+int(xGrid[1]*1/3)), placement[1]+int(xGrid[1]*1/3)), width=3) #Draw left-to-right line
-        pygame.draw.line(self.screen, gridColor, ((placement[0]-int(xGrid[1]*1/3)), placement[1]+int(xGrid[1]*1/3)), ((placement[0]+int(xGrid[1]*1/3)), placement[1]-int(xGrid[1]*1/3)), width=3)
+        pygame.draw.line(self.screen, gridColor, ((placement[0]-int(xGrid[1]*1/3)), placement[1]-int(yGrid[1]*1/3)), ((placement[0]+int(xGrid[1]*1/3)), placement[1]+int(yGrid[1]*1/3)), width=3) #Draw left-to-right line
+        pygame.draw.line(self.screen, gridColor, ((placement[0]-int(xGrid[1]*1/3)), placement[1]+int(yGrid[1]*1/3)), ((placement[0]+int(xGrid[1]*1/3)), placement[1]-int(yGrid[1]*1/3)), width=3)
 
     def drawO(self, placement):
-        pygame.draw.circle(self.screen, gridColor, (placement[0], placement[1]), xCenters[0]*2/3, 3)
+        pygame.draw.circle(self.screen, gridColor, (placement[0], placement[1]), (0.5*(xCenters[0]+yCenters[0]))*2/3, 3)
 
     def drawStored(self):
         for i in range(len(self.previousMoves)):
@@ -63,8 +63,8 @@ class tictac:
         for j in range(len(yCenters)): #check to see where on the grid the mouse coords lie
             for i in range(len(xCenters)):
                 self.count += 1
-                if xMouse > xGrid[int(i)] and xMouse < xGrid[int(i+1)]:
-                    if yMouse > xGrid[j] and yMouse < xGrid[j+1]:
+                if xMouse > xGrid[int(i)] and xMouse < xGrid[int(i+1)]: #compares mouse locations and sees if they are between grid lines
+                    if yMouse > yGrid[j] and yMouse < yGrid[j+1]:
                         self.placement = [int(xCenters[i]),int(yCenters[j])]                        
                         return
 
@@ -88,11 +88,30 @@ class tictac:
                 self.xTurn = not self.xTurn
                 positions[self.count] = self.turn
                 self.turn = self.pieces[0]
-#        print(positions)
-                
+#        print(positions)'
+
+    #def checkforwin(self):
+    #    for i in (self.pieces):
+    #        if positions == ["x","x","x",i,i,i,i,i,i]:
+    #            print("x wins")
+    #        elif positions == [i,i,i,"x","x","x",i,i,i]:
+    #            print("x wins")
+    #        elif positions == [i,i,i,i,i,i,"x","x","x"]:
+    #            print("x wins")
+    #        elif positions == ["x",i,i,"x",i,i,"x",i,i]:
+    #            print("x wins")
+    #        elif positions == [i,"x",i,i,"x",i,i,"x",i]:
+    #            print("x wins")
+    #        elif positions == [i,i,"x",i,i,"x",i,i,"x"]:
+    #            print("x wins")
+    #        elif positions == ["x",i,i,i,"x",i,i,i,"x"]:
+    #            print("x wins")
+    #        elif positions == [i,i,"x",i,"x",i,"x",i,i]:
+    #            print("x wins")
+  
 
 
-class mainGame:
+class mainGame: #overall program
     def __init__(self):
         pygame.init()
         pygame.mixer.init()
